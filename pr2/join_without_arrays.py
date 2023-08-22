@@ -1,11 +1,10 @@
-import time
-
-from pyspark.sql import SparkSession
 import pyspark.sql.functions as F
+from pyspark.sql import SparkSession
 
-from lib.lib import read_csv
+from lib.lib import read_csv, elapse_time
 
 
+@elapse_time
 def process_job(spark):
     products_df = read_csv(spark, '../datasets/products.csv')
     order_products_df = read_csv(spark, '../datasets/order_products.csv')
@@ -37,11 +36,7 @@ def main():
         .config('spark.executor.memory', '4g') \
         .getOrCreate()
 
-    start_time = time.time()
-
     process_job(spark)
-
-    print(f"Time consumed: {time.time() - start_time}")
 
 
 if __name__ == '__main__':
